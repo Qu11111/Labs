@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Form</title>
+    <style>
+        /* Пример стилей для формы */
+        form {
+            margin: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 5px;
+        }
+        input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <form action="https://yandex.ru/search" method="_blank">
+        <input type="text" name="text" placeholder="Поиск на Яндексе...">
+        <input type="submit" value="Поиск">
+    </form>
+
+    <form action="https://nova.rambler.ru/search" method="_blank">
+        <input type="text" name="query" placeholder="Поиск на Рамблере...">
+        <input type="submit" value="Поиск">
+    </form>
+
+    <form action="https://www.google.ru/search" method="get" target="_blank">
+        <input type="text" name="q" placeholder="Поиск в Гугле...">
+        <input type="submit" value="Поиск">
+    </form>
+
+    <form id="filesearchForm" action="https://filesearch.ru/search" method="get" target="_blank">
+        <input type="text" id="searchInput" name="q" placeholder="Поиск в Файлсерче..." oninput="updateAction()">
+        <input type="submit" value="Поиск">
+    </form>
+
+    <script>
+        function updateAction() {
+            var inputText = document.getElementById('searchInput').value;
+            var form = document.getElementById('filesearchForm');
+            form.action = "https://filesearch.aport.ru/search?q=" + inputText;
+        }
+    </script>
+</body>
+</html>
