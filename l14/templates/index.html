@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <style>
+        body {
+            font-family: 'Arial, sans-serif';
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            color: #000000;
+        }
+
+        .chatbox {
+            width: 45%;
+            height: 80vh;
+            border: 2px solid #6b6b6b;
+            background-color: #ffffff;
+            overflow-y: scroll;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-right: 10px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            word-wrap: break-word;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background-color: #3498db;
+            color: #ffffff;
+            align-self: flex-end;
+        }
+
+        .server-message {
+            background-color: #dddddd;
+            color: #777777;
+            align-self: flex-start;
+        }
+
+        input.messageinput {
+            width: 45%;
+            padding: 8px;
+            border: 2px solid #6b6b6b;
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: #000000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button.sendbutton {
+            max-width: 180px;
+            padding: 8px 16px;
+            background-color: #27ae60;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button.sendbutton:hover {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chatbox"></div>
+    <div class="group">
+        <input class="messageinput" type="text">
+        <button class="sendbutton">Отправить сообщение</button>
+    </div>
+
+    <script>
+        const chatbox = document.querySelector(".chatbox");
+        const messageinput = document.querySelector(".messageinput");
+        const sendbutton = document.querySelector(".sendbutton");
+
+        sendbutton.addEventListener("click", async () => {
+            const userMsg = messageinput.value.trim();
+            if (!userMsg) return;
+
+            const userMsgElement = document.createElement("div");
+            userMsgElement.textContent = userMsg;
+            userMsgElement.classList.add("message", "user-message");
+            chatbox.appendChild(userMsgElement);
+
+            messageinput.value = '';
+
+            const loader = document.createElement("span");
+            loader.classList.add("loader");
+            chatbox.appendChild(loader);
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/answer?q=${userMsg}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                chatbox.removeChild(loader);
+
+                const serverMsgElement = document.createElement("div");
+                serverMsgElement.textContent = data.msg;
+                serverMsgElement.classList.add("message", "server-message");
+                chatbox.appendChild(serverMsgElement);
+                chatbox.scrollTop = chatbox.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>
